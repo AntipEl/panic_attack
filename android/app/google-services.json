@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "83383217682",
+    "project_id": "panicattack-5ef7d",
+    "storage_bucket": "panicattack-5ef7d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:83383217682:android:4917ce66fa5f63c02432cb",
+        "android_client_info": {
+          "package_name": "com.minda.panicattack.panic_attack"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAL3rjMkZ_9Vv0Cf1ae33DXGmWBjZxp0RQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
