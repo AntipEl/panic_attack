@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:panic_attack/screens/add_pattern_screen.dart';
-import 'package:panic_attack/screens/techniques_screen.dart';
 import 'package:provider/provider.dart';
+
 import '../models/breathing_pattern.dart';
 import '../state/patterns_controller.dart';
 import '../state/settings_controller.dart';
 
-class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({super.key});
-
+class TechniquesScreen extends StatelessWidget {
+  const TechniquesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+
     final settings = context.watch<SettingsController>();
-    final patterns = context
-        .watch<PatternsController>()
-        .patterns;
+    final patterns = context.watch<PatternsController>().patterns;
 
     return Scaffold(
       appBar: AppBar(
@@ -25,6 +22,7 @@ class SettingsScreen extends StatelessWidget {
       body: ListView.builder(
         itemCount: patterns.length,
         itemBuilder: (context, index) {
+
           final BreathingPattern pattern = patterns[index];
 
           final bool isDefault =
@@ -37,9 +35,7 @@ class SettingsScreen extends StatelessWidget {
             title: Text(pattern.name),
 
             subtitle: Text(
-              "${pattern.inhale}-${pattern.holdAfterInhale}-${pattern
-                  .exhale}-${pattern.holdAfterExhale} • ${pattern
-                  .sessionMinutes} min",
+              "${pattern.inhale}-${pattern.holdAfterInhale}-${pattern.exhale}-${pattern.holdAfterExhale} • ${pattern.sessionMinutes} min",
             ),
 
             trailing: Row(
@@ -54,7 +50,9 @@ class SettingsScreen extends StatelessWidget {
 
                 PopupMenuButton<String>(
                   onSelected: (value) {
+
                     if (value == "default") {
+
                       context
                           .read<SettingsController>()
                           .setDefaultPattern(pattern);
@@ -67,6 +65,7 @@ class SettingsScreen extends StatelessWidget {
                     }
 
                     if (value == "delete") {
+
                       context
                           .read<PatternsController>()
                           .deletePattern(pattern.id);
@@ -80,6 +79,7 @@ class SettingsScreen extends StatelessWidget {
                   },
 
                   itemBuilder: (context) {
+
                     final items = <PopupMenuEntry<String>>[];
 
                     items.add(
@@ -105,6 +105,7 @@ class SettingsScreen extends StatelessWidget {
             ),
 
             onTap: () {
+
               context
                   .read<SettingsController>()
                   .setDefaultPattern(pattern);
@@ -131,6 +132,3 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 }
-///добавить кнопки управления звуком,
-///вибрацией, темная тема,
-///запуск дефолтной техники без заставки
