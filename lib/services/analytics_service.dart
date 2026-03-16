@@ -31,4 +31,19 @@ class AnalyticsService {
       name: 'session_end_screen_shown',
     );
   }
+
+  static Future<void> breathingFeedback(String result) async {
+    await _analytics.logEvent(
+      name: 'breathing_feedback',
+      parameters: {
+        'result': result,
+      },
+    );
+  }
+
+  static Future<void> breathingRetry() async {
+    await _analytics.logEvent(
+      name: 'breathing_retry',
+    );
+  }
 }

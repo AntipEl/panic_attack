@@ -2,13 +2,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:panic_attack/screens/intro_screen.dart';
 import 'package:panic_attack/services/ads_service.dart';
-import 'package:panic_attack/services/analytics_service.dart';
+
+import 'app.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await AdsService.init();
-  runApp(const MyApp());
+  runApp(const App());
 }
 
 class MyApp extends StatelessWidget {

@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:panic_attack/screens/add_pattern_screen.dart';
+import 'package:panic_attack/services/breathing_patterns_repository.dart';
+import 'package:panic_attack/state/patterns_controller.dart';
+import 'package:panic_attack/state/settings_controller.dart';
 import 'package:provider/provider.dart';
 
 import 'screens/intro_screen.dart';
@@ -47,17 +51,45 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<BreathingController>(
-      create: (_) {
-        final controller = BreathingController();
-        _breathingController = controller;
-        return controller;
-      },
+    return MultiProvider(
+      providers:[
+
+        ChangeNotifierProvider(
+          create: (_) {
+            final controller = PatternsController();
+            controller.load();
+            return controller;
+          },
+        ),
+
+        ChangeNotifierProvider<BreathingController>(
+          create: (_) {
+            final controller = BreathingController(
+              pattern: BreathingPatternsRepository.defaultPattern,
+            );
+            _breathingController = controller;
+            return controller;
+          },
+        ),
+
+        ChangeNotifierProvider<SettingsController>(
+          create: (_) {
+            final controller = SettingsController();
+            controller.init();
+            return controller;
+          },
+        ),
+
+      ],
+
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           useMaterial3: true,
         ),
+        routes: {
+          "/addPattern": (_) => const AddPatternScreen(),
+        },
         home: const IntroScreen(),
       ),
     );

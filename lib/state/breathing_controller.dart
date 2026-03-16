@@ -1,24 +1,34 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
+import '../models/breathing_pattern.dart';
 import '../services/ads_service.dart';
 import '../services/analytics_service.dart';
 
 enum BreathingPhase {
   prepare,
   inhale,
+  holdAfterInhale,
   exhale,
+  holdAfterExhale,
 }
 
 class BreathingController extends ChangeNotifier {
+  final BreathingPattern pattern;
+
+  BreathingController({
+    required this.pattern,
+  });
+
   VoidCallback? onSessionComplete;
 
   BreathingPhase phase = BreathingPhase.prepare;
+  int phaseSecondsRemaining = 0;
+  Timer? _phaseCountdownTimer;
 
   final prepare = const Duration(seconds: 3);
-  final inhale = const Duration(seconds: 4);
-  final exhale = const Duration(seconds: 6);
-  final sessionLength = const Duration(minutes: 2);
+  late final Duration sessionLength;
 
   bool isRunning = false;
   Duration elapsed = Duration.zero;
@@ -33,13 +43,18 @@ class BreathingController extends ChangeNotifier {
     elapsed = Duration.zero;
     phase = BreathingPhase.prepare;
 
+    sessionLength = pattern.sessionDuration;
+
     WakelockPlus.enable();
 
     AdsService.preloadInterstitial();
 
-    _startPhaseTimer();
-    _startSessionTimer();
+    _hapticForPhase();
+
     notifyListeners();
+    _startPhaseTimer();
+
+    _startSessionTimer();
   }
 
   void pause({bool interrupted = true}) {
@@ -65,34 +80,117 @@ class BreathingController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _startPreparePhase() {
-    _phaseTimer?.cancel();
+  void _hapticForPhase() {
 
-    _phaseTimer = Timer(prepare, () {
-      if (!isRunning) return;
+    switch (phase) {
 
-      phase = BreathingPhase.inhale;
-      notifyListeners();
-      _startPhaseTimer();
-    });
+      case BreathingPhase.inhale:
+        HapticFeedback.lightImpact();
+        break;
+
+      case BreathingPhase.holdAfterInhale:
+        HapticFeedback.selectionClick();
+        break;
+
+      case BreathingPhase.exhale:
+        HapticFeedback.mediumImpact();
+        break;
+
+      case BreathingPhase.holdAfterExhale:
+        HapticFeedback.selectionClick();
+        break;
+
+      default:
+        break;
+    }
   }
 
   void _startPhaseTimer() {
     _phaseTimer?.cancel();
 
-    final duration =
-    phase == BreathingPhase.inhale ? inhale : exhale;
+    Duration duration;
+
+    switch (phase) {
+
+      case BreathingPhase.inhale:
+        duration = slowBreathing
+            ? pattern.inhaleDuration + const Duration(seconds: 1)
+            : pattern.inhaleDuration;
+        break;
+
+      case BreathingPhase.holdAfterInhale:
+        duration = slowBreathing
+            ? pattern.holdAfterInhaleDuration + const Duration(seconds: 1)
+            : pattern.holdAfterInhaleDuration;
+        break;
+
+      case BreathingPhase.exhale:
+        duration = slowBreathing
+            ? pattern.exhaleDuration + const Duration(seconds: 1)
+            : pattern.exhaleDuration;
+        break;
+
+      case BreathingPhase.holdAfterExhale:
+        duration = slowBreathing
+            ? pattern.holdAfterExhaleDuration + const Duration(seconds: 1)
+            : pattern.holdAfterExhaleDuration;
+        break;
+
+      default:
+        duration = const Duration(seconds: 1);
+    }
+
+    phaseSecondsRemaining = duration.inSeconds;
+    _startPhaseCountdown();
+    notifyListeners();
 
     _phaseTimer = Timer(duration, () {
+
       if (!isRunning) return;
 
-      phase = phase == BreathingPhase.inhale
-          ? BreathingPhase.exhale
-          : BreathingPhase.inhale;
+      switch (phase) {
+
+        case BreathingPhase.inhale:
+          phase = BreathingPhase.holdAfterInhale;
+          break;
+
+        case BreathingPhase.holdAfterInhale:
+          phase = BreathingPhase.exhale;
+          break;
+
+        case BreathingPhase.exhale:
+          phase = BreathingPhase.holdAfterExhale;
+          break;
+
+        case BreathingPhase.holdAfterExhale:
+          phase = BreathingPhase.inhale;
+          break;
+
+        default:
+          phase = BreathingPhase.inhale;
+      }
+      _hapticForPhase();
 
       notifyListeners();
       _startPhaseTimer();
     });
+  }
+
+  void _startPhaseCountdown() {
+    _phaseCountdownTimer?.cancel();
+
+    _phaseCountdownTimer = Timer.periodic(
+      const Duration(seconds: 1),
+          (_) {
+
+        if (!isRunning) return;
+
+        if (phaseSecondsRemaining > 0) {
+          phaseSecondsRemaining--;
+          notifyListeners();
+        }
+      },
+    );
   }
 
   void _startSessionTimer() {
@@ -115,11 +213,21 @@ class BreathingController extends ChangeNotifier {
     );
   }
 
+  bool slowBreathing = false;
+
+  void slowMode() {
+
+    slowBreathing = true;
+
+    notifyListeners();
+  }
+
   @override
   void dispose() {
     WakelockPlus.disable();
     _phaseTimer?.cancel();
     _sessionTimer?.cancel();
+    _phaseCountdownTimer?.cancel();
     super.dispose();
   }
 }
