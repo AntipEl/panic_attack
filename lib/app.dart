@@ -16,7 +16,6 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> with WidgetsBindingObserver {
-  BreathingController? _breathingController;
 
   @override
   void initState() {
@@ -32,19 +31,17 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    final controller = _breathingController;
-    if (controller == null) return;
 
     switch (state) {
       case AppLifecycleState.resumed:
-       // controller.resume();
+
         break;
 
       case AppLifecycleState.inactive:
       case AppLifecycleState.paused:
       case AppLifecycleState.hidden:
       case AppLifecycleState.detached:
-        controller.pause();
+
         break;
     }
   }
@@ -52,25 +49,17 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers:[
+      providers: [
 
         ChangeNotifierProvider(
           create: (_) {
-            final controller = PatternsController();
+            final controller = PatternsController(repository: BreathingPatternsRepository());
             controller.load();
             return controller;
           },
         ),
 
-        ChangeNotifierProvider<BreathingController>(
-          create: (_) {
-            final controller = BreathingController(
-              pattern: BreathingPatternsRepository.defaultPattern,
-            );
-            _breathingController = controller;
-            return controller;
-          },
-        ),
+        // BreathingController убран — он создаётся локально в BreathingScreen
 
         ChangeNotifierProvider<SettingsController>(
           create: (_) {
@@ -82,15 +71,34 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
       ],
 
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          useMaterial3: true,
-        ),
-        routes: {
-          "/addPattern": (_) => const AddPatternScreen(),
+      child: Consumer<SettingsController>(
+        builder: (context, settings, _) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+
+            theme: ThemeData(
+              useMaterial3: true,
+              brightness: Brightness.light,
+              colorSchemeSeed: Colors.blue,
+            ),
+
+            darkTheme: ThemeData(
+              useMaterial3: true,
+              brightness: Brightness.dark,
+              colorSchemeSeed: Colors.blue,
+            ),
+
+            themeMode: settings.darkTheme
+                ? ThemeMode.dark
+                : ThemeMode.light,
+
+            routes: {
+              "/addPattern": (_) => const AddPatternScreen(),
+            },
+
+            home: const IntroScreen(),
+          );
         },
-        home: const IntroScreen(),
       ),
     );
   }

@@ -20,16 +20,16 @@ class _SupportProjectScreenState extends State<SupportProjectScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.all(24),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
+            Text(
               'You did well.\n\n'
                   'This app is developed and supported by a small independent team.\n'
                   'Watching a short ad helps keep it free for everyone.',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 18),
+              style: TextStyle(fontSize: 18, color: Theme.of(context).colorScheme.onSurface),
             ),
             const SizedBox(height: 40),
             // PRIMARY — поддержка проекта (реклама)
@@ -45,7 +45,7 @@ class _SupportProjectScreenState extends State<SupportProjectScreen> {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white, // если хочешь контраст с бордером
+                  backgroundColor: Theme.of(context).colorScheme.surface, // если хочешь контраст с бордером
                   elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(28),
@@ -55,9 +55,9 @@ class _SupportProjectScreenState extends State<SupportProjectScreen> {
                     ),
                   ),
                 ),
-                child: const Text(
+                child: Text(
                   'Support the project',
-                  style: TextStyle(fontSize: 16, color: Colors.black87),
+                  style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurface),
                 ),
               ),
             ),
@@ -73,23 +73,18 @@ class _SupportProjectScreenState extends State<SupportProjectScreen> {
                   Navigator.popUntil(context, (r) => r.isFirst);
                 },
                 style: ElevatedButton.styleFrom(
-                  //side: BorderSide.none,
-                  // backgroundColor: Colors.white60,
-                  // side: const BorderSide(
-                  //   color: Colors.blueAccent,
-                  //   width: 2,
-                  // ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(28),
                   ),
+                  backgroundColor: Theme.of(context).colorScheme.onInverseSurface,
                 ),
-                child: const Text(
+                child: Text(
                   'Maybe later',
-                  style: TextStyle(fontSize: 16, color: Colors.black87),
+                  style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurface
+                  ),
                 ),
               ),
             ),
-
           ],
         ),
       ),

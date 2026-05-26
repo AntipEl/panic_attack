@@ -276,11 +276,18 @@ class _AddPatternScreenState extends State<AddPatternScreen> {
 
             const Spacer(),
 
-            SizedBox(
-              width: double.infinity,
+            Center(
               child: ElevatedButton(
                 onPressed: _savePattern,
-                child: const Text("Save Pattern"),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blueAccent,
+                  foregroundColor: Theme.of(context).colorScheme.surface,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40,
+                    vertical: 14,
+                  ),
+                ),
+                child: Text("Save Pattern"),
               ),
             ),
           ],

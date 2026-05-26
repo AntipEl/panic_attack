@@ -65,99 +65,54 @@ class _BreathingViewState extends State<_BreathingView> {
   Widget build(BuildContext context) {
     return Consumer<BreathingController>(
       builder: (context, controller, _) {
-        final isInhale = controller.phase == BreathingPhase.inhale;
-        final isExhale = controller.phase == BreathingPhase.exhale;
-        final isPrepare = controller.phase == BreathingPhase.prepare;
 
-        final scale = switch (controller.phase) {
+        final scale = controller.currentScale;
+        final duration = controller.currentDuration;
+        final label = controller.currentLabel;
 
-          BreathingPhase.prepare => 0.85,
-
-        BreathingPhase.inhale => 1.0,
-
-        BreathingPhase.holdAfterInhale => 1.0,
-
-        BreathingPhase.exhale => 0.7,
-
-        BreathingPhase.holdAfterExhale => 0.7,
-        };
-
-        final duration = switch (controller.phase) {
-
-          BreathingPhase.prepare => controller.prepare,
-
-          BreathingPhase.inhale => controller.pattern.inhaleDuration,
-
-          BreathingPhase.holdAfterInhale =>
-          controller.pattern.holdAfterInhaleDuration,
-
-          BreathingPhase.exhale =>
-          controller.pattern.exhaleDuration,
-
-          BreathingPhase.holdAfterExhale =>
-          controller.pattern.holdAfterExhaleDuration,
-        };
-
-        final label = switch (controller.phase) {
-
-          BreathingPhase.prepare => 'Get Ready',
-
-          BreathingPhase.inhale => 'Inhale',
-
-          BreathingPhase.holdAfterInhale => 'Hold',
-
-          BreathingPhase.exhale => 'Exhale',
-
-          BreathingPhase.holdAfterExhale => 'Hold',
-        };
 
         return Scaffold(
-          backgroundColor: Colors.white,
-            body: GestureDetector(
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          body: GestureDetector(
 
-              onTap: () {
-                context.read<BreathingController>().slowMode();
-              },
+            onTap: () {
+              context.read<BreathingController>().toggleSlowMode();
+            },
 
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 200,
-                      height: 200,
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-
-                          BreathingOrb(
-                            scale: scale,
-                            duration: duration,
-                          ),
-                        ],
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: BreathingOrb.orbSize,
+                    height: BreathingOrb.orbSize,
+                    child:
+                      BreathingOrb(
+                        scale: scale,
+                        duration: duration,
                       ),
+                  ),
+                  const SizedBox(height: 40),
+                  Text(
+                    label,
+                    style: const TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w500,
                     ),
-                    const SizedBox(height: 40),
-                    Text(
-                      label,
-                      style: const TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
+                  ),
+                  const SizedBox(height: 10),
 
-                    Text(
-                      "${controller.phaseSecondsRemaining}",
-                      style: const TextStyle(
-                        fontSize: 48,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  Text(
+                    "${controller.phaseSecondsRemaining}",
+                    style: const TextStyle(
+                      fontSize: 48,
+                      fontWeight: FontWeight.bold,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
+          ),
         );
       },
     );
