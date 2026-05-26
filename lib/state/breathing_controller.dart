@@ -27,14 +27,48 @@ class BreathingController extends ChangeNotifier {
   int phaseSecondsRemaining = 0;
   Timer? _phaseCountdownTimer;
 
-  final prepare = const Duration(seconds: 3);
+  final prepareDuration = const Duration(seconds: 3);
   late final Duration sessionLength;
+
+  bool slowBreathing = false;
 
   bool isRunning = false;
   Duration elapsed = Duration.zero;
 
   Timer? _phaseTimer;
   Timer? _sessionTimer;
+
+  double get currentScale {
+    return switch (phase) {
+      BreathingPhase.prepare => 0.85,
+      BreathingPhase.inhale => 1.0,
+      BreathingPhase.holdAfterInhale => 1.0,
+      BreathingPhase.exhale => 0.7,
+      BreathingPhase.holdAfterExhale => 0.7,
+    };
+  }
+
+  Duration get currentDuration {
+    final extra = slowBreathing ? const Duration (seconds: 1) : Duration.zero;
+
+    return switch (phase) {
+      BreathingPhase.prepare => prepareDuration,
+      BreathingPhase.inhale => pattern.inhaleDuration + extra,
+      BreathingPhase.holdAfterInhale => pattern.holdAfterInhaleDuration + extra,
+      BreathingPhase.exhale => pattern.exhaleDuration + extra,
+      BreathingPhase.holdAfterExhale => pattern.holdAfterExhaleDuration + extra,
+    };
+  }
+
+  String get currentLabel {
+    return switch (phase) {
+      BreathingPhase.prepare => 'Get Ready',
+      BreathingPhase.inhale => 'Inhale',
+      BreathingPhase.holdAfterInhale => 'Hold',
+      BreathingPhase.exhale => 'Exhale',
+      BreathingPhase.holdAfterExhale => 'Hold',
+    };
+  }
 
   void start() {
     if (isRunning) return;
@@ -108,37 +142,7 @@ class BreathingController extends ChangeNotifier {
   void _startPhaseTimer() {
     _phaseTimer?.cancel();
 
-    Duration duration;
-
-    switch (phase) {
-
-      case BreathingPhase.inhale:
-        duration = slowBreathing
-            ? pattern.inhaleDuration + const Duration(seconds: 1)
-            : pattern.inhaleDuration;
-        break;
-
-      case BreathingPhase.holdAfterInhale:
-        duration = slowBreathing
-            ? pattern.holdAfterInhaleDuration + const Duration(seconds: 1)
-            : pattern.holdAfterInhaleDuration;
-        break;
-
-      case BreathingPhase.exhale:
-        duration = slowBreathing
-            ? pattern.exhaleDuration + const Duration(seconds: 1)
-            : pattern.exhaleDuration;
-        break;
-
-      case BreathingPhase.holdAfterExhale:
-        duration = slowBreathing
-            ? pattern.holdAfterExhaleDuration + const Duration(seconds: 1)
-            : pattern.holdAfterExhaleDuration;
-        break;
-
-      default:
-        duration = const Duration(seconds: 1);
-    }
+    final duration = currentDuration;
 
     phaseSecondsRemaining = duration.inSeconds;
     _startPhaseCountdown();
@@ -213,12 +217,8 @@ class BreathingController extends ChangeNotifier {
     );
   }
 
-  bool slowBreathing = false;
-
-  void slowMode() {
-
-    slowBreathing = true;
-
+  void toggleSlowMode() {
+    slowBreathing = !slowBreathing;
     notifyListeners();
   }
 

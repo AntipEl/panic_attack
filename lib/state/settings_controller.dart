@@ -1,36 +1,17 @@
 import 'package:flutter/material.dart';
 import '../models/breathing_pattern.dart';
-import '../services/breathing_patterns_repository.dart';
 import '../services/settings_storage.dart';
 
 class SettingsController extends ChangeNotifier {
-
   bool sound = true;
   bool vibration = true;
   bool darkTheme = false;
-
-  BreathingPattern defaultPattern = BreathingPatternsRepository.defaultPattern;
+  String? defaultPatternId;
 
   Future<void> init() async {
-
-    final savedId = await SettingsStorage.loadDefaultPattern();
-
-    if (savedId == null) {
-      defaultPattern = BreathingPatternsRepository.defaultPattern;
-      notifyListeners();
-      return;
-    }
-
-    final pattern =
-    BreathingPatternsRepository.findById(savedId);
-
-    if (pattern != null) {
-      defaultPattern = pattern;
-    } else {
-      defaultPattern =
-          BreathingPatternsRepository.defaultPattern;
-    }
-      notifyListeners();
+    defaultPatternId = await SettingsStorage.loadDefaultPattern();
+    darkTheme = await SettingsStorage.loadTheme() ?? false;
+    notifyListeners();
   }
 
   void toggleSound(bool value) {
@@ -45,12 +26,13 @@ class SettingsController extends ChangeNotifier {
 
   void toggleTheme(bool value) {
     darkTheme = value;
+    SettingsStorage.saveTheme(value);
     notifyListeners();
   }
 
   Future<void> setDefaultPattern(BreathingPattern pattern) async {
 
-    defaultPattern = pattern;
+    defaultPatternId = pattern.id;
 
     await SettingsStorage.saveDefaultPattern(pattern.id);
 

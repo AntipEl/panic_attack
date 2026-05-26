@@ -26,7 +26,7 @@ class TechniquesScreen extends StatelessWidget {
           final BreathingPattern pattern = patterns[index];
 
           final bool isDefault =
-              settings.defaultPattern.id == pattern.id;
+              settings.defaultPatternId == pattern.id;
 
           final bool isUserPattern =
           pattern.id.startsWith("user_");
@@ -122,7 +122,7 @@ class TechniquesScreen extends StatelessWidget {
 
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blueAccent,
-        foregroundColor: Colors.white,
+        foregroundColor: Theme.of(context).colorScheme.onSurface,
         child: const Icon(Icons.add),
 
         onPressed: () {

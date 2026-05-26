@@ -26,7 +26,7 @@ class _SessionEndScreenState extends State<SessionEndScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
+              Text(
                 'Good job.',
                 style: TextStyle(
                   fontSize: 32,
@@ -34,7 +34,7 @@ class _SessionEndScreenState extends State<SessionEndScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              const Text(
+              Text(
                 'Your body is calming down.\nYou are safe.',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 20),
@@ -50,7 +50,7 @@ class _SessionEndScreenState extends State<SessionEndScreen> {
                     Navigator.pop(context);
                   },
                   style: OutlinedButton.styleFrom(
-                    backgroundColor: Colors.white,
+                    backgroundColor: Theme.of(context).colorScheme.surface,
                     side: const BorderSide(
                       color: Colors.blueAccent,
                       width: 2,
@@ -59,9 +59,9 @@ class _SessionEndScreenState extends State<SessionEndScreen> {
                       borderRadius: BorderRadius.circular(28),
                     ),
                   ),
-                  child: const Text(
+                  child: Text(
                     'I want to keep breathing',
-                    style: TextStyle(fontSize: 16, color: Colors.black87),
+                    style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurface),
                   ),
                 ),
               ),
@@ -85,21 +85,22 @@ class _SessionEndScreenState extends State<SessionEndScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(28),
                     ),
+                    backgroundColor: Theme.of(context).colorScheme.onInverseSurface,
                   ),
-                  child: const Text(
+                  child: Text(
                     'Support the app',
-                    style: TextStyle(fontSize: 16, color: Colors.black87),
+                    style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurface),
                   ),
                 ),
               ),
 
               const SizedBox(height: 12),
-              const Text(
+              Text(
                 'Watching a short ad helps keep this app free.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 13,
-                  color: Colors.black54,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
             ],
