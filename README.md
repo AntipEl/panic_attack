@@ -8,7 +8,10 @@ Android only (Flutter-based application)
 ## Preview
 
 <p align="center">
-  <img src="screenshots/pattern_creating.png" width="250"/>
+  <img src="https://raw.githubusercontent.com/AntipEl/antipel.github.io/refs/heads/main/screen_panic-attack/breathing_circle.png" width="150"/>
+  <img src="https://raw.githubusercontent.com/AntipEl/antipel.github.io/refs/heads/main/screen_panic-attack/breathing_circle_light.png" width="150"/>
+  <img src="https://raw.githubusercontent.com/AntipEl/antipel.github.io/refs/heads/main/screen_panic-attack/pattren_creating.png" width="150"/>
+  <img src="https://raw.githubusercontent.com/AntipEl/antipel.github.io/refs/heads/main/screen_panic-attack/settings.png" width="150"/>
 </p>
 
 ## Tech Stack
