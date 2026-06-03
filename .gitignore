@@ -1,10 +1,10 @@
 # Miscellaneous
 *.class
 *.log
-*.pyc
-*.swp
+local.properties
+**/key.properties
 *.jks
-*.jks.old
+*.keystore
 .DS_Store
 .atom/
 .build/
@@ -27,7 +27,6 @@ migrate_working_dir/
 
 # Flutter/Dart/Pub related
 **/doc/api/
-**/ios/Flutter/.last_build_id
 .dart_tool/
 .flutter-plugins-dependencies
 .pub-cache/
