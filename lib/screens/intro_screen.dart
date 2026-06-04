@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:panic_attack/screens/settings_screen.dart';
 import 'package:provider/provider.dart';
+import '../state/patterns_controller.dart';
 import '../state/settings_controller.dart';
 import 'breathing_screen.dart';
 
@@ -14,23 +15,27 @@ class IntroScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final settings =
-    context.read<SettingsController>();
+    final settings = context.watch<SettingsController>();
+    final patterns = context.watch<PatternsController>();
+    final defaultPattern = patterns.patterns.firstWhere(
+          (p) => p.id == settings.defaultPatternId,
+      orElse: () => patterns.patterns.first,
+    );
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
         child: Stack(
           children: [
             /// ⚙ SETTINGS BUTTON
             Positioned(
-              top: 24,
+              bottom: 24,
               right: 16,
               child: FloatingActionButton(
                 mini: false,
                 heroTag: "settingsFab",
                 backgroundColor: Colors.blueAccent,
-                foregroundColor: Colors.white,
+                foregroundColor: Theme.of(context).colorScheme.surface,
                 child: const Icon(Icons.settings),
                 onPressed: () {
                   Navigator.push(
@@ -65,10 +70,10 @@ class IntroScreen extends StatelessWidget {
                         ? "Sometimes the body needs a little more time."
                         : "The exercise will end on its own.",
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
                       height: 1.4,
-                      color: Colors.black54,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -77,19 +82,19 @@ class IntroScreen extends StatelessWidget {
                         ? "Let's try one more round."
                         : "Just breathe and follow the circle.",
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
                       height: 1.4,
-                      color: Colors.black54,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 16),
-                  const Text(
+                  Text(
                     'First, slowly exhale.',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 18,
-                      color: Colors.black54,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 48),
@@ -108,16 +113,16 @@ class IntroScreen extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (_) => BreathingScreen(
-                              pattern: settings.defaultPattern,
+                              pattern: defaultPattern,
                             ),
                           ),
                         );
                       },
                       child: Text(
                         retryMode ? 'Start again' : 'Start breathing',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 18,
-                          color: Colors.white,
+                          color: Theme.of(context).colorScheme.surface,
                         ),
                       ),
                     ),

@@ -1,7 +1,8 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 
 class BreathingOrb extends StatelessWidget {
+  static const double orbSize = 200;
+
   final double scale;
   final Duration duration;
 
@@ -20,7 +21,7 @@ class BreathingOrb extends StatelessWidget {
       transformAlignment: Alignment.center,
       transform: Matrix4.identity()..scale(scale),
       child: CustomPaint(
-        size: const Size(200, 200),
+        size: const Size(orbSize, orbSize),
         painter: _BreathingOrbPainter(scale),
       ),
     );
@@ -37,42 +38,75 @@ class _BreathingOrbPainter extends CustomPainter {
     final center = size.center(Offset.zero);
     final radius = size.width / 2;
 
-    /// основной градиент
+    // ── 1. Основной градиент (чуть глубже) ─────────────
     final gradient = RadialGradient(
       colors: [
-        const Color(0xFF8ED5FF),
-        const Color(0xFF2196F3),
-        const Color(0xFF0D47A1),
+        const Color(0xFFB3E5FC),
+        const Color(0xFF42A5F5),
+        const Color(0xFF205AB3),
       ],
-      stops: const [0.2, 0.6, 1],
+      stops: const [0.15, 0.6, 1],
     );
 
-    final paint = Paint()
+    final basePaint = Paint()
       ..shader = gradient.createShader(
         Rect.fromCircle(center: center, radius: radius),
       );
 
-    canvas.drawCircle(center, radius, paint);
+    canvas.drawCircle(center, radius, basePaint);
 
-    /// внутренний туман
-    final fogPaint = Paint()
-      ..color = Colors.white.withOpacity(0.08 * scale)
-      ..maskFilter = const MaskFilter.blur(
-        BlurStyle.normal,
-        30,
+    // ── 2. Мягкое "дыхание света" (без анимаций, через scale) ─────
+    final lightShift = Offset(
+      -radius * 0.25 * scale,
+      -radius * 0.25 * scale,
+    );
+
+    final innerLight = Paint()
+      ..shader = RadialGradient(
+        colors: [
+          Colors.white.withOpacity(0.18 * scale),
+          Colors.transparent,
+        ],
+      ).createShader(
+        Rect.fromCircle(
+          center: center + lightShift,
+          radius: radius,
+        ),
       );
 
-    canvas.drawCircle(center, radius * 0.6, fogPaint);
+    canvas.drawCircle(center, radius, innerLight);
 
-    /// мягкий glow
-    final glowPaint = Paint()
-      ..color = Colors.blueAccent.withOpacity(0.35 * scale)
-      ..maskFilter = const MaskFilter.blur(
-        BlurStyle.normal,
-        40,
+    // ── 3. Внутренний "туман" (облегчённый, без тяжёлого blur) ─────
+    final fog = Paint()
+      ..shader = RadialGradient(
+        colors: [
+          Colors.white.withOpacity(0.06 * scale),
+          Colors.transparent,
+        ],
+      ).createShader(
+        Rect.fromCircle(
+          center: center,
+          radius: radius * 0.65,
+        ),
       );
 
-    canvas.drawCircle(center, radius * 0.9, glowPaint);
+    canvas.drawCircle(center, radius * 0.65, fog);
+
+    // ── 4. Внешний glow (дешёвый, без maskFilter) ────────────────
+    final glow = Paint()
+      ..shader = RadialGradient(
+        colors: [
+          Colors.blueAccent.withOpacity(0.25 * scale),
+          Colors.transparent,
+        ],
+      ).createShader(
+        Rect.fromCircle(
+          center: center,
+          radius: radius * 1.2,
+        ),
+      );
+
+    canvas.drawCircle(center, radius * 1.2, glow);
   }
 
   @override

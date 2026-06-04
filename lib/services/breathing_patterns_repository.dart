@@ -39,14 +39,14 @@ class BreathingPatternsRepository {
     fourSevenEight,
   ];
 
-  static List<BreathingPattern> userPatterns = [];
+  List<BreathingPattern> userPatterns = [];
 
-  static List<BreathingPattern> get all => [
+  List<BreathingPattern> get all => [
     ...builtInPatterns,
     ...userPatterns,
   ];
 
-  static BreathingPattern? findById(String id) {
+  BreathingPattern? findById(String id) {
     try {
       return all.firstWhere((p) => p.id == id);
     } catch (_) {

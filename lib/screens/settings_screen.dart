@@ -20,117 +20,156 @@ class SettingsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Breathing techniques"),
-      ),
-
-      body: ListView.builder(
-        itemCount: patterns.length,
-        itemBuilder: (context, index) {
-          final BreathingPattern pattern = patterns[index];
-
-          final bool isDefault =
-              settings.defaultPattern.id == pattern.id;
-
-          final bool isUserPattern =
-          pattern.id.startsWith("user_");
-
-          return ListTile(
-            title: Text(pattern.name),
-
-            subtitle: Text(
-              "${pattern.inhale}-${pattern.holdAfterInhale}-${pattern
-                  .exhale}-${pattern.holdAfterExhale} • ${pattern
-                  .sessionMinutes} min",
-            ),
-
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-
-                if (isDefault)
-                  const Icon(
-                    Icons.check_circle,
-                    color: Colors.green,
+        actions: [
+          Padding(
+          padding: const EdgeInsets.only(right: 16),
+            child:IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, "/addPattern");
+              },
+              icon: const Icon(Icons.add),
+              style: ButtonStyle(
+                backgroundColor: WidgetStateProperty.all(Colors.blueAccent),
+                foregroundColor: WidgetStateProperty.all(Colors.white),
+                shape: WidgetStateProperty.all(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
                   ),
-
-                PopupMenuButton<String>(
-                  onSelected: (value) {
-                    if (value == "default") {
-                      context
-                          .read<SettingsController>()
-                          .setDefaultPattern(pattern);
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Technique set as default"),
-                        ),
-                      );
-                    }
-
-                    if (value == "delete") {
-                      context
-                          .read<PatternsController>()
-                          .deletePattern(pattern.id);
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Technique deleted"),
-                        ),
-                      );
-                    }
-                  },
-
-                  itemBuilder: (context) {
-                    final items = <PopupMenuEntry<String>>[];
-
-                    items.add(
-                      const PopupMenuItem(
-                        value: "default",
-                        child: Text("Set as default"),
-                      ),
-                    );
-
-                    if (isUserPattern) {
-                      items.add(
-                        const PopupMenuItem(
-                          value: "delete",
-                          child: Text("Delete"),
-                        ),
-                      );
-                    }
-
-                    return items;
-                  },
                 ),
-              ],
+              ),
             ),
+          ),
+        ]
+      ),
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverList.builder(
+            itemCount: patterns.length,
+            itemBuilder: (context, index) {
+              final BreathingPattern pattern = patterns[index];
 
-            onTap: () {
-              context
-                  .read<SettingsController>()
-                  .setDefaultPattern(pattern);
+              final bool isDefault =
+                  settings.defaultPatternId == pattern.id;
 
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text("Technique set as default"),
+              final bool isUserPattern =
+              pattern.id.startsWith("user_");
+
+              return ListTile(
+                title: Text(pattern.name),
+
+                subtitle: Text(
+                  "${pattern.inhale}-${pattern.holdAfterInhale}-${pattern
+                      .exhale}-${pattern.holdAfterExhale} • ${pattern
+                      .sessionMinutes} min",
                 ),
+
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+
+                    if (isDefault)
+                      const Icon(
+                        Icons.check_circle,
+                        color: Colors.green,
+                      ),
+
+                    PopupMenuButton<String>(
+                      onSelected: (value) {
+                        if (value == "default") {
+                          context
+                              .read<SettingsController>()
+                              .setDefaultPattern(pattern);
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Technique set as default"),
+                            ),
+                          );
+                        }
+
+                        if (value == "delete") {
+                          context
+                              .read<PatternsController>()
+                              .deletePattern(pattern.id);
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Technique deleted"),
+                            ),
+                          );
+                        }
+                      },
+
+                      itemBuilder: (context) {
+                        final items = <PopupMenuEntry<String>>[];
+
+                        items.add(
+                          const PopupMenuItem(
+                            value: "default",
+                            child: Text("Set as default"),
+                          ),
+                        );
+
+                        if (isUserPattern) {
+                          items.add(
+                            const PopupMenuItem(
+                              value: "delete",
+                              child: Text("Delete"),
+                            ),
+                          );
+                        }
+
+                        return items;
+                      },
+                    ),
+                  ],
+                ),
+
+                onTap: () {
+                  context
+                      .read<SettingsController>()
+                      .setDefaultPattern(pattern);
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Technique set as default"),
+                    ),
+                  );
+                },
               );
             },
-          );
-        },
-      ),
+          ),
+          SliverToBoxAdapter(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 16, bottom: 8, top:16),
+                  child: Text(
+                    "Settings",
+                    style: TextStyle(fontSize: 24),
+                  ),
+                ),
 
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blueAccent,
-        foregroundColor: Colors.white,
-        child: const Icon(Icons.add),
-
-        onPressed: () {
-          Navigator.pushNamed(context, "/addPattern");
-        },
+              ],
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: SwitchListTile(
+              title: Text("Dark theme"),
+              value: settings.darkTheme,
+              onChanged: (val) {
+                context.read<SettingsController>().toggleTheme(val);
+              },
+            ),
+          )
+        ]
       ),
     );
   }
+
+
 }
 ///добавить кнопки управления звуком,
-///вибрацией, темная тема,
+///вибрацией,
 ///запуск дефолтной техники без заставки
