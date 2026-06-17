@@ -1,0 +1,29 @@
+image: ghcr.io/cirruslabs/flutter:stable
+
+stages:
+  - analyze
+  - test
+  - build
+
+analyze:
+  stage: analyze
+
+  script:
+    - flutter pub get
+    - flutter analyze
+
+test:
+  stage: test
+
+  script:
+    - flutter test
+
+build:
+  stage: build
+
+  script:
+    - flutter build apk --split-per-abi
+
+  artifacts:
+    paths:
+      - build/app/outputs/flutter-apk/
