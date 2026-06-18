@@ -18,6 +18,7 @@ class SettingsStorage {
   static Future<bool?> saveTheme(bool value) async{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_defaultTheme, value);
+    return null;
   }
 
   static Future<bool?> loadTheme() async {

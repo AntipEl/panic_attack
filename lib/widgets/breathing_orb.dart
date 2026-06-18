@@ -64,7 +64,7 @@ class _BreathingOrbPainter extends CustomPainter {
     final innerLight = Paint()
       ..shader = RadialGradient(
         colors: [
-          Colors.white.withOpacity(0.18 * scale),
+          Colors.white.withValues(alpha: 0.18 * scale),
           Colors.transparent,
         ],
       ).createShader(
@@ -80,7 +80,7 @@ class _BreathingOrbPainter extends CustomPainter {
     final fog = Paint()
       ..shader = RadialGradient(
         colors: [
-          Colors.white.withOpacity(0.06 * scale),
+          Colors.white.withValues(alpha: 0.06 * scale),
           Colors.transparent,
         ],
       ).createShader(
@@ -96,7 +96,7 @@ class _BreathingOrbPainter extends CustomPainter {
     final glow = Paint()
       ..shader = RadialGradient(
         colors: [
-          Colors.blueAccent.withOpacity(0.25 * scale),
+          Colors.blueAccent.withValues(alpha: 0.25 * scale),
           Colors.transparent,
         ],
       ).createShader(

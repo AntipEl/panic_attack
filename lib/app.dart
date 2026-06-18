@@ -4,9 +4,7 @@ import 'package:panic_attack/services/breathing_patterns_repository.dart';
 import 'package:panic_attack/state/patterns_controller.dart';
 import 'package:panic_attack/state/settings_controller.dart';
 import 'package:provider/provider.dart';
-
 import 'screens/intro_screen.dart';
-import 'state/breathing_controller.dart';
 
 class App extends StatefulWidget {
   const App({super.key});
