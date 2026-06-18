@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vector_math/vector_math_64.dart' show Vector3;
 
 class BreathingOrb extends StatelessWidget {
   static const double orbSize = 200;
@@ -19,7 +20,7 @@ class BreathingOrb extends StatelessWidget {
       curve: Curves.easeInOut,
       alignment: Alignment.center,
       transformAlignment: Alignment.center,
-      transform: Matrix4.identity()..scale(scale),
+      transform: Matrix4.identity()..scaleByVector3(Vector3(scale, scale, 1.0)),
       child: CustomPaint(
         size: const Size(orbSize, orbSize),
         painter: _BreathingOrbPainter(scale),
