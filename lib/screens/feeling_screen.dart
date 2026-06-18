@@ -39,6 +39,7 @@ class _FeelingScreenState extends State<FeelingScreen> {
     _answered = true;
 
     await AnalyticsService.breathingFeedback(result);
+    if (!mounted) return;
 
     if (result == "worse") {
 

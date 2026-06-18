@@ -1,4 +1,3 @@
-
 import '../models/breathing_pattern.dart';
 
 class BreathingPatternsRepository {

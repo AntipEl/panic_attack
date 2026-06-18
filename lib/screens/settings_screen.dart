@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:panic_attack/screens/add_pattern_screen.dart';
-import 'package:panic_attack/screens/techniques_screen.dart';
 import 'package:provider/provider.dart';
 import '../models/breathing_pattern.dart';
 import '../state/patterns_controller.dart';

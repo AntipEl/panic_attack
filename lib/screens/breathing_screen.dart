@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:panic_attack/screens/session_end_screen.dart';
 import 'package:provider/provider.dart';
 import '../models/breathing_pattern.dart';
-import '../services/breathing_patterns_repository.dart';
 import '../state/breathing_controller.dart';
 import '../widgets/breathing_orb.dart';
 import 'feeling_screen.dart';

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../models/breathing_pattern.dart';
 import '../state/patterns_controller.dart';
 
