@@ -20,7 +20,7 @@ build:
   stage: build
   script:
     - echo $KEYSTORE_BASE64 | base64 -d > android/keystore.jks
-    - printf "keyAlias=$KEY_ALIAS\nkeyPassword=$KEY_PASSWORD\nstorePassword=$STORE_PASSWORD\nstoreFile=keystore.jks\n" > android/key.properties
+    - printf "keyAlias=$KEY_ALIAS\nkeyPassword=$KEY_PASSWORD\nstorePassword=$STORE_PASSWORD\nstoreFile=$(pwd)/android/keystore.jks\n" > android/key.properties
     - echo $GOOGLE_SERVICES_JSON_BASE64 | base64 -d > android/app/google-services.json
     - echo $GOOGLE_SERVICES_JSON_BASE64 | base64 -d | head -c 100
     - echo $GOOGLE_SERVICES_JSON_BASE64 | base64 -d | python3 -m json.tool
