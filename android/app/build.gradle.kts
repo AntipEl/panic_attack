@@ -64,6 +64,6 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:34.8.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("androidx.multidex:multidex:2.0.1")
-    implementation("com.appodeal.ads:sdk:3.12.0.1")
+    implementation("com.appodeal.ads.sdk:core:4.1.0")
     implementation("com.android.billingclient:billing:7.0.0")
 }
