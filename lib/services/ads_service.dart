@@ -27,7 +27,7 @@ class AdsService {
     );
 
     await Appodeal.initialize(
-      appKey: '41f0c447a887f4b622ca48f6d469bb7d0fd2d5ea0f61bf43',
+      appKey: const String.fromEnvironment('APPODEAL_KEY'),
       adTypes: [AppodealAdType.Interstitial],
       onInitializationFinished: (errors) {
         if (errors != null && errors.isNotEmpty) {
