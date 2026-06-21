@@ -6,6 +6,7 @@ google-services.json
 *.swp
 local.properties
 **/key.properties
+*.old
 *.jks
 *.keystore
 .DS_Store
